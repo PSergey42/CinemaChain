@@ -1,6 +1,6 @@
 package com.example.cinemachain.repository;
 
-import com.example.cinemachain.model.Schedule;
+import com.example.cinemachain.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

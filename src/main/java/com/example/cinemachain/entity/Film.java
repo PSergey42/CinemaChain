@@ -1,6 +1,8 @@
-package com.example.cinemachain.model;
+package com.example.cinemachain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 @Table (name = "film")
 @Entity
 public class Film {
@@ -32,4 +35,9 @@ public class Film {
     private List<Actor> actors;
     @Column(name = "budget")
     private long budget;
+
+    public Film() {
+
+    }
+
 }

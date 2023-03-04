@@ -1,4 +1,4 @@
-package com.example.cinemachain.model;
+package com.example.cinemachain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
