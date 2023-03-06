@@ -1,6 +1,7 @@
 package com.example.cinemachain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.Time;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 @Table (name = "schedule")
 @Entity
 public class Schedule {
@@ -26,4 +28,8 @@ public class Schedule {
     private int hall;
     @Column(name = "number_seats")
     private int numberSeats;
+
+    public Schedule() {
+
+    }
 }

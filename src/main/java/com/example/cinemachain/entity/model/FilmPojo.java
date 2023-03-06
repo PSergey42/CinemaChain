@@ -16,8 +16,8 @@ public class FilmPojo {
     private UUID id;
     private String name;
     private Date dateExits;
-    private List<Genre> genres;
-    private List<Actor> actors;
+    private List<GenrePojo> genres;
+    private List<ActorPojo> actors;
     private long budget;
 
     public FilmPojo() {
@@ -25,10 +25,12 @@ public class FilmPojo {
     }
 
     public static Film toEntity(FilmPojo filmPojo){
-        return new Film(filmPojo.getId(), filmPojo.getName(), filmPojo.getDateExits(), filmPojo.getGenres(), filmPojo.getActors(), filmPojo.getBudget());
+        return new Film(filmPojo.getId(), filmPojo.getName(), filmPojo.getDateExits(), filmPojo.getGenres().stream().map(GenrePojo::toEntity).toList(),
+                filmPojo.getActors().stream().map(ActorPojo::toEntity).toList(), filmPojo.getBudget());
     }
 
     public static FilmPojo fromEntity(Film film){
-        return new FilmPojo(film.getId(), film.getName(), film.getDateExits(), film.getGenres(), film.getActors(), film.getBudget());
+        return new FilmPojo(film.getId(), film.getName(), film.getDateExits(), film.getGenres().stream().map(GenrePojo::fromEntity).toList(),
+                film.getActors().stream().map(ActorPojo::fromEntity).toList(), film.getBudget());
     }
 }

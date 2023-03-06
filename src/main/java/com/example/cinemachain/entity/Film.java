@@ -1,9 +1,8 @@
 package com.example.cinemachain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -21,12 +20,14 @@ public class Film {
     private String name;
     @Column(name = "date_exits")
     private Date dateExits;
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "genre_film",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "actor_film",

@@ -2,10 +2,8 @@ package com.example.cinemachain.controller;
 
 import com.example.cinemachain.entity.model.FilmPojo;
 import com.example.cinemachain.service.FilmService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,16 +26,11 @@ public class FilmController {
     }
 
     @GetMapping("/filmsByParams")
-    public List<FilmPojo> getFilmsByParams(@RequestParam(value = "name") String nameFilm,
-                                           @RequestParam(value = "genres_id") String genresId,
-                                           @RequestParam(value = "actors_id") String actorsId,
-                                           @RequestParam(value = "budgets") String budgets) {
+    public List<FilmPojo> getFilmsByParams(@RequestParam(value = "name", required = false) String nameFilm,
+                                           @RequestParam(value = "genres_id", required = false) String genresId,
+                                           @RequestParam(value = "actors_id", required = false) String actorsId,
+                                           @RequestParam(value = "budgets", required = false) String budgets) {
         return filmService.getFilmsByParams(nameFilm, genresId, actorsId, budgets);
-    }
-
-    @GetMapping("/filmByName/{nameFilm}")
-    public List<FilmPojo> searchFilmByName(@PathVariable("nameFilm") String nameFilm) {
-        return filmService.searchFilmByName(nameFilm);
     }
 
     @PutMapping("/film")
@@ -53,5 +46,25 @@ public class FilmController {
     @DeleteMapping ("/film/{id}")
     public void deleteFilm(@PathVariable("id") UUID id){
         filmService.deleteFilm(id);
+    }
+
+    @PutMapping("/film/{film_id}/addActor/{id}")
+    public FilmPojo addActorInFilm(@PathVariable("film_id") UUID filmId, @PathVariable("id") UUID id){
+        return filmService.addActorInFilm(filmId, id);
+    }
+
+    @DeleteMapping ("/film/{film_id}/deleteActor/{id}")
+    public void deleteActorFromFilm(@PathVariable("film_id") UUID filmId, @PathVariable("id") UUID id){
+        filmService.deleteActorFromFilm(filmId, id);
+    }
+
+    @PutMapping("/film/{film_id}/addGenre/{id}")
+    public FilmPojo addGenreInFilm(@PathVariable("film_id") UUID filmId, @PathVariable("id") UUID id){
+        return filmService.addGenreInFilm(filmId, id);
+    }
+
+    @DeleteMapping ("/film/{film_id}/deleteGenre/{id}")
+    public void deleteGenreFromFilm(@PathVariable("film_id") UUID filmId, @PathVariable("id") UUID id){
+        filmService.deleteGenreFromFilm(filmId, id);
     }
 }
