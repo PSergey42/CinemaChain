@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/api")
 public class FilmController {
     private FilmService filmService;
 
@@ -15,7 +16,7 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @GetMapping("/films")
+    @GetMapping("/film")
     public List<FilmPojo> getAll() {
         return filmService.getAllFilms();
     }
@@ -33,12 +34,12 @@ public class FilmController {
         return filmService.getFilmsByParams(nameFilm, genresId, actorsId, budgets);
     }
 
-    @PutMapping("/film")
+    @PostMapping("/film")
     public FilmPojo addFilm(@RequestBody FilmPojo filmPojo){
         return filmService.addFilm(filmPojo);
     }
 
-    @PostMapping("/film")
+    @PutMapping("/film")
     public FilmPojo updateFilm(@RequestBody FilmPojo filmPojo){
         return filmService.updateFilm(filmPojo);
     }

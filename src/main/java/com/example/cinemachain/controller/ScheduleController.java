@@ -2,6 +2,7 @@ package com.example.cinemachain.controller;
 
 import com.example.cinemachain.entity.model.GenrePojo;
 import com.example.cinemachain.entity.model.SchedulePojo;
+import com.example.cinemachain.entity.model.ScheduleV2Pojo;
 import com.example.cinemachain.service.ScheduleService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +18,22 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedules")
-    public List<SchedulePojo> getAll() {
+    public List<ScheduleV2Pojo> getAll() {
         return scheduleService.getAllSchedules();
     }
 
     @GetMapping("/schedule/{id}")
-    public SchedulePojo getScheduleById(@PathVariable("id") UUID id) {
-        return scheduleService.getScheduleById(id);
+    public List<SchedulePojo> getScheduleByCinemaId(@PathVariable("id") UUID id) {
+        return scheduleService.getScheduleByCinemaId(id);
     }
 
     @PutMapping("/schedule")
-    public SchedulePojo addSchedule(@RequestBody SchedulePojo schedulePojo){
+    public ScheduleV2Pojo addSchedule(@RequestBody ScheduleV2Pojo schedulePojo){
         return scheduleService.addSchedule(schedulePojo);
     }
 
     @PostMapping("/schedule")
-    public SchedulePojo updateSchedule(@RequestBody SchedulePojo schedulePojo){
+    public ScheduleV2Pojo updateSchedule(@RequestBody ScheduleV2Pojo schedulePojo){
         return scheduleService.updateSchedule(schedulePojo);
     }
 

@@ -1,7 +1,5 @@
 package com.example.cinemachain.controller;
 
-
-import com.example.cinemachain.entity.model.ActorPojo;
 import com.example.cinemachain.entity.model.GenrePojo;
 import com.example.cinemachain.service.GenreService;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/api")
 public class GenreController {
     private GenreService genreService;
 
@@ -17,7 +16,7 @@ public class GenreController {
         this.genreService = genreService;
     }
 
-    @GetMapping("/genres")
+    @GetMapping("/genre")
     public List<GenrePojo> getAll() {
         return genreService.getAllGenres();
     }
@@ -27,17 +26,17 @@ public class GenreController {
         return genreService.getGenreById(id);
     }
 
-    @GetMapping("/genreByName/{nameGenre}")
+    @GetMapping("/genre/search/{nameGenre}")
     public List<GenrePojo> searchGenreByName(@PathVariable("nameGenre") String nameGenre) {
         return genreService.searchGenreByName(nameGenre);
     }
 
-    @PutMapping("/genre")
+    @PostMapping("/genre")
     public GenrePojo addGenre(@RequestBody GenrePojo genrePojo){
         return genreService.addGenre(genrePojo);
     }
 
-    @PostMapping("/genre")
+    @PutMapping("/genre")
     public GenrePojo updateGenre(@RequestBody GenrePojo genrePojo){
         return genreService.updateGenre(genrePojo);
     }

@@ -52,6 +52,7 @@ public class FilmService {
         filmRepository.deleteById(id);
     }
 
+    // TODO: add cinema_id
     public List<FilmPojo> getFilmsByParams(String nameFilm, String genresId, String actorsId, String budgets) {
         List<FilmPojo> list = searchFilmByName(nameFilm);
         if (genresId != null && !genresId.equals("")){

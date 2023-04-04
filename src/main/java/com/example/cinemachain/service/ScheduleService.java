@@ -1,13 +1,13 @@
 package com.example.cinemachain.service;
 
-import com.example.cinemachain.entity.model.ActorPojo;
-import com.example.cinemachain.entity.model.FilmPojo;
+import com.example.cinemachain.entity.Schedule;
 import com.example.cinemachain.entity.model.SchedulePojo;
+import com.example.cinemachain.entity.model.ScheduleV2Pojo;
+import com.example.cinemachain.entity.model.SessionPojo;
 import com.example.cinemachain.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ScheduleService {
@@ -17,26 +17,37 @@ public class ScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
-    public List<SchedulePojo> getAllSchedules() {
-        return scheduleRepository.findAll().stream().map(SchedulePojo::fromEntity).toList();
+    public List<ScheduleV2Pojo> getAllSchedules() {
+        return scheduleRepository.findAll().stream().map(ScheduleV2Pojo::fromEntity).toList();
     }
 
     // TODO: return 404
-    public SchedulePojo getScheduleById(UUID id) {
-        var schedule = scheduleRepository.findById(id);
-        if(schedule.isEmpty()){
+    public List<SchedulePojo> getScheduleByCinemaId(UUID id) {
+        var schedules = scheduleRepository.findByCinemaId(id);
+        if(schedules.isEmpty()){
             return null;
         }
-        return SchedulePojo.fromEntity(schedule.get());
+        HashMap<UUID, SchedulePojo> list = new HashMap<>();
+        for (Schedule schedule: schedules){
+            if(list.containsKey(schedule.getFilmId())){
+                list.get(schedule.getFilmId()).getSessions().add(new SessionPojo(schedule.getShowDate(), schedule.getShowTime(), schedule.getHall(), schedule.getNumberSeats()));
+            }
+            else {
+                list.put(schedule.getFilmId(), new SchedulePojo(schedule.getId(), schedule.getFilmId(), schedule.getCinemaId(),
+                        List.of(new SessionPojo(schedule.getShowDate(), schedule.getShowTime(), schedule.getHall(), schedule.getNumberSeats()))));
+            }
+        }
+        return list.values().stream().toList();
     }
 
-    public SchedulePojo addSchedule(SchedulePojo schedulePojo) {
+
+    public ScheduleV2Pojo addSchedule(ScheduleV2Pojo schedulePojo) {
         schedulePojo.setId(UUID.randomUUID());
-        return SchedulePojo.fromEntity(scheduleRepository.save(SchedulePojo.toEntity(schedulePojo)));
+        return ScheduleV2Pojo.fromEntity(scheduleRepository.save(ScheduleV2Pojo.toEntity(schedulePojo)));
     }
 
-    public SchedulePojo updateSchedule(SchedulePojo schedulePojo) {
-        return SchedulePojo.fromEntity(scheduleRepository.save(SchedulePojo.toEntity(schedulePojo)));
+    public ScheduleV2Pojo updateSchedule(ScheduleV2Pojo schedulePojo) {
+        return ScheduleV2Pojo.fromEntity(scheduleRepository.save(ScheduleV2Pojo.toEntity(schedulePojo)));
     }
 
     // TODO: return boolean

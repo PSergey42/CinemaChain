@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/api")
 public class CinemaController {
     private CinemaService cinemaService;
 
@@ -26,17 +27,17 @@ public class CinemaController {
         return cinemaService.getCinemaById(id);
     }
 
-    @GetMapping("/actorByName/{nameFilm}")
+    @GetMapping("/cinema/search/{nameFilm}")
     public List<CinemaPojo> searchFilmByName(@PathVariable("nameFilm") String nameCinema) {
         return cinemaService.searchCinemaByName(nameCinema);
     }
 
-    @PutMapping("/cinema")
+    @PostMapping("/cinema")
     public CinemaPojo addCinema(@RequestBody CinemaPojo cinemaPojo){
         return cinemaService.addCinema(cinemaPojo);
     }
 
-    @PostMapping("/cinema")
+    @PutMapping("/cinema")
     public CinemaPojo updateCinema(@RequestBody CinemaPojo cinemaPojo){
         return cinemaService.updateCinema(cinemaPojo);
     }
