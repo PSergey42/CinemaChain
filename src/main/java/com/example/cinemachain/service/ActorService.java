@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Service
 public class ActorService {
-    private ActorRepository actorRepository;
+    private final ActorRepository actorRepository;
 
     public ActorService(ActorRepository actorRepository) {
         this.actorRepository = actorRepository;

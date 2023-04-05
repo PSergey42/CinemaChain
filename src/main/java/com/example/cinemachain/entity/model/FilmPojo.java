@@ -1,12 +1,10 @@
 package com.example.cinemachain.entity.model;
 
-import com.example.cinemachain.entity.Actor;
 import com.example.cinemachain.entity.Film;
-import com.example.cinemachain.entity.Genre;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 

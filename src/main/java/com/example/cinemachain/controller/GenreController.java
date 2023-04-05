@@ -10,7 +10,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api")
 public class GenreController {
-    private GenreService genreService;
+    private final GenreService genreService;
 
     public GenreController(GenreService genreService) {
         this.genreService = genreService;

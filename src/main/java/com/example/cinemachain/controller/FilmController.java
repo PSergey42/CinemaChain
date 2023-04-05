@@ -10,7 +10,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api")
 public class FilmController {
-    private FilmService filmService;
+    private final FilmService filmService;
 
     public FilmController(FilmService filmService) {
         this.filmService = filmService;

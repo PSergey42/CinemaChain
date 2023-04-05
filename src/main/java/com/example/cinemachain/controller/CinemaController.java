@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api")
 public class CinemaController {
-    private CinemaService cinemaService;
+    private final CinemaService cinemaService;
 
     public CinemaController(CinemaService cinemaService) {
         this.cinemaService = cinemaService;

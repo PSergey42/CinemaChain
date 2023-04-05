@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.sql.Time;
-import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -17,17 +16,12 @@ public class Schedule {
     @Column(name = "schedule_id")
     private UUID id;
     @Column(name = "film_id")
+    //@JoinColumn(name = "schedule_id", foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
     private UUID filmId;
     @Column(name = "cinema_id")
     private UUID cinemaId;
-    @Column(name = "show_date")
-    private Date showDate;
-    @Column(name = "show_time")
-    private Time showTime;
-    @Column(name = "hall")
-    private int hall;
-    @Column(name = "number_seats")
-    private int numberSeats;
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<Session> sessions;
 
     public Schedule() {
 

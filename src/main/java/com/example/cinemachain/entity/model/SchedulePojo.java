@@ -22,5 +22,11 @@ public class SchedulePojo {
 
     }
 
+    public static Schedule toEntity(SchedulePojo schedulePojo) {
+        return new Schedule(schedulePojo.getId(), schedulePojo.getFilmId(), schedulePojo.getCinemaId(), schedulePojo.getSessions().stream().map(SessionPojo::toEntity).toList());
+    }
 
+    public static SchedulePojo fromEntity(Schedule schedule) {
+        return new SchedulePojo(schedule.getId(), schedule.getFilmId(), schedule.getCinemaId(), schedule.getSessions().stream().map(SessionPojo::fromEntity).toList());
+    }
 }

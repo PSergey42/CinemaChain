@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api")
 public class ActorController {
-    private ActorService actorService;
+    private final ActorService actorService;
 
     public ActorController(ActorService actorService) {
         this.actorService = actorService;

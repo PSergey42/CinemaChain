@@ -1,7 +1,6 @@
 package com.example.cinemachain.service;
 
 import com.example.cinemachain.entity.model.CinemaPojo;
-import com.example.cinemachain.entity.model.FilmPojo;
 import com.example.cinemachain.repository.CinemaRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +9,7 @@ import java.util.UUID;
 
 @Service
 public class CinemaService {
-    private CinemaRepository cinemaRepository;
+    private final CinemaRepository cinemaRepository;
 
     public CinemaService(CinemaRepository cinemaRepository) {
         this.cinemaRepository = cinemaRepository;
