@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
 
     //TODO переделать на join
-    @Query(value = "SELECT schedule_id, film_id, cinema_id, (SELECT * FROM session s WHERE s.schedule_id = schedule_id AND s.show_date = :date) FROM schedule WHERE cinema_id = :id", nativeQuery = true)
-    List<Schedule> findByCinemaIdaAndSessionsDate(UUID id, Date date);
+    //@Query(value = "SELECT schedule_id, film_id, cinema_id, (SELECT * FROM session s WHERE s.schedule_id = schedule_id AND s.show_date = :date) FROM schedule WHERE cinema_id = :id", nativeQuery = true)
+    //List<Schedule> findByCinemaIdaAndSessionsDate(UUID id, Date date);
+    List<Schedule> findByCinemaId(UUID id);
 }

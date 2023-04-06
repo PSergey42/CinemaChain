@@ -24,7 +24,8 @@ public class ScheduleService {
     // TODO: return 404
     public List<SchedulePojo> getScheduleByCinemaIdAndDate(UUID id, String date) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        var schedules = scheduleRepository.findByCinemaIdaAndSessionsDate(id, dateFormat.parse(date));
+        //var schedules = scheduleRepository.findByCinemaIdaAndSessionsDate(id, dateFormat.parse(date));
+        var schedules = scheduleRepository.findByCinemaId(id);
         if(schedules.isEmpty()){
             return null;
         }
@@ -40,7 +41,9 @@ public class ScheduleService {
     }
 
     public SchedulePojo updateSchedule(SchedulePojo schedulePojo) {
-        return SchedulePojo.fromEntity(scheduleRepository.save(SchedulePojo.toEntity(schedulePojo)));
+        Schedule schedule = SchedulePojo.toEntity(schedulePojo);
+        schedule.getSessions().forEach(s -> s.setSchedule(schedule));
+        return SchedulePojo.fromEntity(scheduleRepository.save(schedule));
     }
 
     // TODO: return boolean
