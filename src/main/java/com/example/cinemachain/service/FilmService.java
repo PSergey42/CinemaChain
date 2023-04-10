@@ -57,15 +57,20 @@ public class FilmService {
         List<FilmPojo> list = searchFilmByName(nameFilm);
         if (genresId != null && !genresId.equals("")){
             List<UUID> uuidGenres = Arrays.stream(genresId.split(",")).map(UUID::fromString).toList();
-            list = list.stream().filter(x -> x.getGenres().stream().anyMatch(y -> uuidGenres.stream().anyMatch(z -> z.equals(y.getId())))).toList();
+            list = list.stream().filter(x ->
+                    x.getGenres().stream().anyMatch(y ->
+                            uuidGenres.stream().anyMatch(z -> z.equals(y.getId())))).toList();
         }
         if (actorsId != null && !actorsId.equals("")){
             List<UUID> uuidActors = Arrays.stream(actorsId.split(",")).map(UUID::fromString).toList();
-            list = list.stream().filter(x -> x.getActors().stream().anyMatch(y -> uuidActors.stream().anyMatch(z -> z.equals(y.getId())))).toList();
+            list = list.stream().filter(x ->
+                    x.getActors().stream().anyMatch(y ->
+                            uuidActors.stream().anyMatch(z -> z.equals(y.getId())))).toList();
         }
         if(budgets != null && !budgets.equals("")){
             List<Budget> budgets2 = Arrays.stream(budgets.split(",")).map(Budget::parseBudget).toList();
-            list = list.stream().filter(x -> budgets2.stream().anyMatch(z -> x.getBudget() <= z.getUp() && x.getBudget() > z.getDown())).toList();
+            list = list.stream().filter(x ->
+                    budgets2.stream().anyMatch(z -> x.getBudget() <= z.getUp() && x.getBudget() > z.getDown())).toList();
         }
         return list;
     }

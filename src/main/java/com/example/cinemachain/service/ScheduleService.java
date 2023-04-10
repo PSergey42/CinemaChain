@@ -3,19 +3,22 @@ package com.example.cinemachain.service;
 import com.example.cinemachain.entity.Schedule;
 import com.example.cinemachain.entity.model.SchedulePojo;
 import com.example.cinemachain.repository.ScheduleRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final EntityManager entityManager;
 
-    public ScheduleService(ScheduleRepository scheduleRepository) {
+    public ScheduleService(ScheduleRepository scheduleRepository, EntityManager entityManager) {
         this.scheduleRepository = scheduleRepository;
+        this.entityManager = entityManager;
     }
 
     public List<SchedulePojo> getAllSchedules() {
@@ -23,9 +26,14 @@ public class ScheduleService {
     }
 
     // TODO: return 404
-    public List<SchedulePojo> getScheduleByCinemaIdAndDate(UUID id, String date) throws ParseException {
-        var schedules =  scheduleRepository.findByCinemaIdaAndSessionsDate(id, Date.valueOf(date));
-        //var schedules = scheduleRepository.findByCinemaId(id);
+    public List<SchedulePojo> getScheduleByCinemaIdAndDate(UUID id, String date) {
+        List<Schedule> schedules = entityManager.createQuery(
+                "SELECT x FROM Schedule x JOIN FETCH x.sessions WHERE x.cinemaId = :id",
+                Schedule.class
+        ).setParameter("id", id).getResultList();
+        schedules.forEach(s ->
+                s.setSessions(s.getSessions().stream().filter(session ->
+                        session.getShowDate().equals(Date.valueOf(date))).toList()));
         if(schedules.isEmpty()){
             return null;
         }

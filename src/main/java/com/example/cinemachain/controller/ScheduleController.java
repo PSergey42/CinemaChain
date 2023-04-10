@@ -2,7 +2,9 @@ package com.example.cinemachain.controller;
 
 import com.example.cinemachain.entity.model.SchedulePojo;
 import com.example.cinemachain.service.ScheduleService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.util.List;
@@ -23,8 +25,12 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedule/{id}")
-    public List<SchedulePojo> getScheduleByCinemaIdAndDate(@PathVariable("id") UUID id, @RequestParam(name = "date") String date) throws ParseException {
-        return scheduleService.getScheduleByCinemaIdAndDate(id, date);
+    public List<SchedulePojo> getScheduleByCinemaIdAndDate(@PathVariable("id") UUID id, @RequestParam(name = "date") String date){
+        List<SchedulePojo> list = scheduleService.getScheduleByCinemaIdAndDate(id, date);
+        if(list == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return list;
     }
 
     @PostMapping("/schedule")
