@@ -5,6 +5,7 @@ import com.example.cinemachain.entity.model.SchedulePojo;
 import com.example.cinemachain.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -23,9 +24,8 @@ public class ScheduleService {
 
     // TODO: return 404
     public List<SchedulePojo> getScheduleByCinemaIdAndDate(UUID id, String date) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //var schedules = scheduleRepository.findByCinemaIdaAndSessionsDate(id, dateFormat.parse(date));
-        var schedules = scheduleRepository.findByCinemaId(id);
+        var schedules =  scheduleRepository.findByCinemaIdaAndSessionsDate(id, Date.valueOf(date));
+        //var schedules = scheduleRepository.findByCinemaId(id);
         if(schedules.isEmpty()){
             return null;
         }
