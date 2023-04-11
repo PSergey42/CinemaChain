@@ -3,21 +3,22 @@ package com.example.cinemachain.service;
 import com.example.cinemachain.entity.Schedule;
 import com.example.cinemachain.entity.model.SchedulePojo;
 import com.example.cinemachain.repository.ScheduleRepository;
+import com.example.cinemachain.repository.SessionRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.text.ParseException;
 import java.util.*;
 
 @Service
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final SessionRepository sessionRepository;
     private final EntityManager entityManager;
 
-    public ScheduleService(ScheduleRepository scheduleRepository, EntityManager entityManager) {
+    public ScheduleService(ScheduleRepository scheduleRepository, SessionRepository sessionRepository, EntityManager entityManager) {
         this.scheduleRepository = scheduleRepository;
+        this.sessionRepository = sessionRepository;
         this.entityManager = entityManager;
     }
 
@@ -25,7 +26,6 @@ public class ScheduleService {
         return scheduleRepository.findAll().stream().map(SchedulePojo::fromEntity).toList();
     }
 
-    // TODO: return 404
     public List<SchedulePojo> getScheduleByCinemaIdAndDate(UUID id, String date) {
         List<Schedule> schedules = entityManager.createQuery(
                 "SELECT x FROM Schedule x JOIN FETCH x.sessions WHERE x.cinemaId = :id",
@@ -34,9 +34,11 @@ public class ScheduleService {
         schedules.forEach(s ->
                 s.setSessions(s.getSessions().stream().filter(session ->
                         session.getShowDate().equals(Date.valueOf(date))).toList()));
+        schedules.removeIf(schedule -> schedule.getSessions().size() == 0);
         if(schedules.isEmpty()){
             return null;
         }
+
         return schedules.stream().map(SchedulePojo::fromEntity).toList();
     }
 
@@ -57,5 +59,10 @@ public class ScheduleService {
     // TODO: return boolean
     public void deleteSchedule(UUID id) {
         scheduleRepository.deleteById(id);
+    }
+
+    // TODO: return boolean
+    public void deleteSession(Long id) {
+        sessionRepository.deleteById(id);
     }
 }

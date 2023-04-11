@@ -47,4 +47,9 @@ public class ScheduleController {
     public void deleteSchedule(@PathVariable("id") UUID id){
         scheduleService.deleteSchedule(id);
     }
+
+    @DeleteMapping ("/schedule/session/{id}")
+    public void deleteSession(@PathVariable("id") Long id){
+        scheduleService.deleteSession(id);
+    }
 }

@@ -26,4 +26,14 @@ public class Schedule {
     public Schedule() {
 
     }
+
+    @Override
+    public String toString() {
+        return "Schedule{" +
+                "id=" + id +
+                ", filmId=" + filmId +
+                ", cinemaId=" + cinemaId +
+                ", sessions=" + sessions +
+                '}';
+    }
 }

@@ -31,4 +31,15 @@ public class Session {
     public Session() {
 
     }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "id=" + id +
+                ", showDate=" + showDate +
+                ", showTime=" + showTime +
+                ", hall=" + hall +
+                ", numberSeats=" + numberSeats +
+                '}';
+    }
 }
