@@ -3,6 +3,8 @@ package com.example.cinemachain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.sql.Date;
 import java.util.List;
@@ -21,14 +23,16 @@ public class Film {
     @Column(name = "date_exits")
     private Date dateExits;
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany()
+    @Fetch(value = FetchMode.SUBSELECT)
     @JoinTable(
             name = "genre_film",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany()
+    @Fetch(value = FetchMode.SUBSELECT)
     @JoinTable(
             name = "actor_film",
             joinColumns = @JoinColumn(name = "film_id"),

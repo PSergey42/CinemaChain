@@ -1,5 +1,6 @@
 package com.example.cinemachain.controller;
 
+import com.example.cinemachain.entity.model.CinemaPojo;
 import com.example.cinemachain.entity.model.SchedulePojo;
 import com.example.cinemachain.service.ScheduleService;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,11 @@ public class ScheduleController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return list;
+    }
+
+    @GetMapping("/schedule/search/{cinemaId}")
+    public List<SchedulePojo> searchScheduleByName(@RequestParam(value = "nameSchedule", required = false) String nameSchedule, @RequestParam(name = "date") String date, @PathVariable("cinemaId") UUID id) {
+        return scheduleService.searchScheduleByName(id, nameSchedule, date);
     }
 
     @PostMapping("/schedule")

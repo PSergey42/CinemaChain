@@ -31,14 +31,10 @@ public class ScheduleService {
                 "SELECT x FROM Schedule x JOIN FETCH x.sessions WHERE x.cinemaId = :id",
                 Schedule.class
         ).setParameter("id", id).getResultList();
-        schedules.forEach(s ->
-                s.setSessions(s.getSessions().stream().filter(session ->
-                        session.getShowDate().equals(Date.valueOf(date))).toList()));
-        schedules.removeIf(schedule -> schedule.getSessions().size() == 0);
+        filterScheduleByDate(schedules, date);
         if(schedules.isEmpty()){
             return null;
         }
-
         return schedules.stream().map(SchedulePojo::fromEntity).toList();
     }
 
@@ -64,5 +60,25 @@ public class ScheduleService {
     // TODO: return boolean
     public void deleteSession(Long id) {
         sessionRepository.deleteById(id);
+    }
+
+    public List<SchedulePojo> searchScheduleByName(UUID id, String nameSchedule, String date) {
+        List<Schedule> schedules = entityManager.createQuery(
+                "SELECT x FROM Schedule x JOIN FETCH x.sessions WHERE x.cinemaId = :id AND (SELECT UPPER(f.name) FROM Film f WHERE f.id = x.filmId) LIKE UPPER(:nameSchedule)",
+                Schedule.class
+        ).setParameter("id", id)
+                .setParameter("nameSchedule", "%" + nameSchedule + "%").getResultList();
+        filterScheduleByDate(schedules, date);
+        if(schedules.isEmpty()){
+            return null;
+        }
+        return schedules.stream().map(SchedulePojo::fromEntity).toList();
+    }
+
+    private void filterScheduleByDate(List<Schedule> schedules, String date){
+        schedules.forEach(s ->
+                s.setSessions(s.getSessions().stream().filter(session ->
+                        session.getShowDate().equals(Date.valueOf(date))).toList()));
+        schedules.removeIf(schedule -> schedule.getSessions().size() == 0);
     }
 }

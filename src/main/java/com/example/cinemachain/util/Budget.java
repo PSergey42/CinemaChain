@@ -13,7 +13,7 @@ public class Budget {
     private long down;
 
     public static Budget parseBudget(String budget){
-        List<Long> s = Arrays.stream(budget.split("-")).map(Long::parseLong).toList();
-        return new Budget(s.get(1), s.get(0));
+        String[] s = budget.split("-");
+        return new Budget(Long.parseLong(s[1]), Long.parseLong(s[0]));
     }
 }

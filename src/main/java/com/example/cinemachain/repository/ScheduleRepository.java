@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, UUID> {
+    Schedule findByCinemaIdAndFilmId(UUID cinemaId, UUID filmId);
 }

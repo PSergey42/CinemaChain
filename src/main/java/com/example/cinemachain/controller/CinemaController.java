@@ -6,6 +6,7 @@ import com.example.cinemachain.service.CinemaService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RestController
@@ -27,8 +28,8 @@ public class CinemaController {
         return cinemaService.getCinemaById(id);
     }
 
-    @GetMapping("/cinema/search/{nameFilm}")
-    public List<CinemaPojo> searchFilmByName(@PathVariable("nameFilm") String nameCinema) {
+    @GetMapping("/cinema/search/{nameCinema}")
+    public List<CinemaPojo> searchCinemaByName(@PathVariable("nameCinema") String nameCinema) {
         return cinemaService.searchCinemaByName(nameCinema);
     }
 
