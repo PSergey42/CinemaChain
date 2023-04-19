@@ -1,0 +1,68 @@
+DROP TABLE IF EXISTS session;
+DROP TABLE IF EXISTS schedule;
+DROP TABLE IF EXISTS actors_film;
+DROP TABLE IF EXISTS genres_film;
+DROP TABLE IF EXISTS film;
+DROP TABLE IF EXISTS cinema;
+DROP TABLE IF EXISTS actor;
+DROP TABLE IF EXISTS genre;
+
+CREATE TABLE actor (
+actor_id uuid PRIMARY KEY,
+fio varchar(50)
+);
+
+CREATE TABLE genre (
+genre_id uuid PRIMARY KEY,
+genre_name varchar UNIQUE
+);
+
+CREATE TABLE film (
+film_id uuid PRIMARY KEY,
+film_name varchar,
+date_exits date,
+budget int
+);
+
+CREATE TABLE genre_film (
+film_id uuid REFERENCES film(film_id) ON DELETE CASCADE,
+genre_id uuid REFERENCES genre(genre_id) ON DELETE CASCADE,
+PRIMARY KEY(film_id, genre_id)
+);
+
+CREATE TABLE actor_film (
+film_id uuid REFERENCES film(film_id) ON DELETE CASCADE,
+actor_id uuid REFERENCES actor(actor_id) ON DELETE CASCADE,
+PRIMARY KEY(film_id, actor_id)
+);
+
+CREATE TABLE cinema (
+cinema_id uuid PRIMARY KEY,
+address varchar,
+cinema_name varchar
+);
+
+CREATE TABLE schedule (
+schedule_id uuid PRIMARY KEY,
+film_id uuid REFERENCES film(film_id),
+cinema_id uuid REFERENCES cinema(cinema_id)
+);
+
+
+CREATE SEQUENCE public.session_sequence
+INCREMENT 1
+START 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+CACHE 1;
+
+CREATE TABLE session (
+session_id bigint PRIMARY KEY DEFAULT nextval('session_sequence'::regclass),
+schedule_id uuid REFERENCES schedule(schedule_id),
+show_date date,
+show_time time,
+hall int,
+number_seats int,
+UNIQUE(schedule_id, show_date, show_time)
+);
+
