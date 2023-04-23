@@ -16,7 +16,6 @@ public class Schedule {
     @Column(name = "schedule_id")
     private UUID id;
     @Column(name = "film_id")
-    //@JoinColumn(name = "schedule_id", foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
     private UUID filmId;
     @Column(name = "cinema_id")
     private UUID cinemaId;

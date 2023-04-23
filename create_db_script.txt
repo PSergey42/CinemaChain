@@ -44,8 +44,8 @@ cinema_name varchar
 
 CREATE TABLE schedule (
 schedule_id uuid PRIMARY KEY,
-film_id uuid REFERENCES film(film_id),
-cinema_id uuid REFERENCES cinema(cinema_id)
+film_id uuid REFERENCES film(film_id) ON DELETE CASCADE,
+cinema_id uuid REFERENCES cinema(cinema_id) ON DELETE CASCADE
 );
 
 
@@ -58,7 +58,7 @@ CACHE 1;
 
 CREATE TABLE session (
 session_id bigint PRIMARY KEY DEFAULT nextval('session_sequence'::regclass),
-schedule_id uuid REFERENCES schedule(schedule_id),
+schedule_id uuid REFERENCES schedule(schedule_id) ON DELETE CASCADE,
 show_date date,
 show_time time,
 hall int,
