@@ -3,4 +3,4 @@
 - username: postgres
 - password: admin
 # Собранный jar файл
- https://disk.yandex.ru/d/Gc5NnLfHDOjHvA
+https://disk.yandex.ru/d/1ieezXSxhgMflw

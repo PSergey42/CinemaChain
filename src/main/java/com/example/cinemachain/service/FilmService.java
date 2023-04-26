@@ -58,14 +58,14 @@ public class FilmService {
         if (genresId != null && !genresId.equals("")){
             List<UUID> uuidGenres = Arrays.stream(genresId.split(",")).map(UUID::fromString).toList();
             list = list.stream().filter(x ->
-                    x.getGenres().stream().anyMatch(y ->
-                            uuidGenres.stream().allMatch(z -> z.equals(y.getId())))).toList();
+                    uuidGenres.stream().allMatch(y ->
+                            x.getGenres().stream().anyMatch(z -> z.getId().equals(y)))).toList();
         }
         if (actorsId != null && !actorsId.equals("")){
             List<UUID> uuidActors = Arrays.stream(actorsId.split(",")).map(UUID::fromString).toList();
             list = list.stream().filter(x ->
-                    x.getActors().stream().anyMatch(y ->
-                            uuidActors.stream().allMatch(z -> z.equals(y.getId())))).toList();
+                    uuidActors.stream().allMatch(y ->
+                            x.getActors().stream().anyMatch(z -> z.getId().equals(y)))).toList();
         }
         if(budgets != null && !budgets.equals("")){
             Budget budgets2 = Budget.parseBudget(budgets);
