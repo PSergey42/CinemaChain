@@ -1,50 +1,26 @@
 package com.example.cinemachain.controller;
 
-import com.example.cinemachain.entity.model.CinemaPojo;
-import com.example.cinemachain.entity.model.FilmPojo;
+import com.example.cinemachain.controller.base.BaseController;
+import com.example.cinemachain.dto.CinemaDTO;
+import com.example.cinemachain.entity.Cinema;
 import com.example.cinemachain.service.CinemaService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
-public class CinemaController {
-    private final CinemaService cinemaService;
+@RequestMapping("/api/cinema")
+public class CinemaController extends BaseController<Cinema, CinemaDTO> {
 
-    public CinemaController(CinemaService cinemaService) {
-        this.cinemaService = cinemaService;
+    protected CinemaController(CinemaService service) {
+        super(service);
     }
 
-    @GetMapping("/cinema")
-    public List<CinemaPojo> getAll() {
-        return cinemaService.getAllCinemas();
-    }
-
-    @GetMapping("/cinema/{id}")
-    public CinemaPojo getCinemaById(@PathVariable("id") UUID id) {
-        return cinemaService.getCinemaById(id);
-    }
-
-    @GetMapping("/cinema/search/{nameCinema}")
-    public List<CinemaPojo> searchCinemaByName(@PathVariable("nameCinema") String nameCinema) {
-        return cinemaService.searchCinemaByName(nameCinema);
-    }
-
-    @PostMapping("/cinema")
-    public CinemaPojo addCinema(@RequestBody CinemaPojo cinemaPojo){
-        return cinemaService.addCinema(cinemaPojo);
-    }
-
-    @PutMapping("/cinema")
-    public CinemaPojo updateCinema(@RequestBody CinemaPojo cinemaPojo){
-        return cinemaService.updateCinema(cinemaPojo);
-    }
-
-    @DeleteMapping ("/cinema/{id}")
-    public void deleteCinema(@PathVariable("id") UUID id){
-        cinemaService.deleteCinema(id);
+    @GetMapping("/search/{name}")
+    public List<CinemaDTO> searchCinemaByName(@PathVariable("name") String name) {
+        return ((CinemaService) service).searchCinemaByName(name);
     }
 }

@@ -1,16 +1,12 @@
 package com.example.cinemachain.repository;
 
 import com.example.cinemachain.entity.Film;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.cinemachain.repository.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface FilmRepository extends JpaRepository<Film, UUID> {
-
+public interface FilmRepository extends BaseRepository<Film> {
     List<Film> findAllByNameContainingIgnoreCase(String name);
-
 }

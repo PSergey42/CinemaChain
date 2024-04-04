@@ -1,70 +1,42 @@
 package com.example.cinemachain.service;
 
 
-import com.example.cinemachain.entity.Actor;
+import com.example.cinemachain.converter.FilmConverter;
+import com.example.cinemachain.dto.ActorDTO;
+import com.example.cinemachain.dto.FilmDTO;
+import com.example.cinemachain.dto.GenreDTO;
 import com.example.cinemachain.entity.Film;
-import com.example.cinemachain.entity.Genre;
-import com.example.cinemachain.entity.model.FilmPojo;
 import com.example.cinemachain.repository.FilmRepository;
+import com.example.cinemachain.service.base.BaseService;
 import com.example.cinemachain.util.Budget;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @Service
-public class FilmService {
-    private final FilmRepository filmRepository;
+public class FilmService extends BaseService<Film, FilmDTO> {
 
-    public FilmService(FilmRepository filmRepository) {
-        this.filmRepository = filmRepository;
+    public FilmService(FilmRepository repository, FilmConverter converter) {
+        super(repository, converter);
     }
 
-    public List<FilmPojo> getAllFilms() {
-        return filmRepository.findAll().stream().map(FilmPojo::fromEntity).toList();
+    public List<FilmDTO> searchFilmByName(String name) {
+        return ((FilmRepository) repository).findAllByNameContainingIgnoreCase(name).stream().map(converter::fromEntity).toList();
     }
 
-    public List<FilmPojo> searchFilmByName(String nameFilm) {
-        return filmRepository.findAllByNameContainingIgnoreCase(nameFilm).stream().map(FilmPojo::fromEntity).toList();
-    }
-
-    // TODO: return 404
-    public FilmPojo getFilmById(UUID id) {
-        var film = filmRepository.findById(id);
-        if(film.isEmpty()){
-            return null;
-        }
-        return FilmPojo.fromEntity(film.get());
-    }
-
-    public FilmPojo addFilm(FilmPojo filmPojo) {
-        filmPojo.setId(UUID.randomUUID());
-        return FilmPojo.fromEntity(filmRepository.save(FilmPojo.toEntity(filmPojo)));
-    }
-
-    public FilmPojo updateFilm(FilmPojo filmPojo) {
-       return FilmPojo.fromEntity(filmRepository.save(FilmPojo.toEntity(filmPojo)));
-    }
-
-    // TODO: return boolean
-    public void deleteFilm(UUID id) {
-        filmRepository.deleteById(id);
-    }
-
-
-    public List<FilmPojo> getFilmsByParams(String nameFilm, String genresId, String actorsId, String budgets) {
-        List<FilmPojo> list = searchFilmByName(nameFilm);
+    public List<FilmDTO> getFilmsByParams(String nameFilm, String genresId, String actorsId, String budgets) {
+        List<FilmDTO> list = searchFilmByName(nameFilm);
         if (genresId != null && !genresId.equals("")){
-            List<UUID> uuidGenres = Arrays.stream(genresId.split(",")).map(UUID::fromString).toList();
+            List<Long> LongGenres = Arrays.stream(genresId.split(",")).map(Long::parseLong).toList();
             list = list.stream().filter(x ->
-                    uuidGenres.stream().allMatch(y ->
+                    LongGenres.stream().allMatch(y ->
                             x.getGenres().stream().anyMatch(z -> z.getId().equals(y)))).toList();
         }
         if (actorsId != null && !actorsId.equals("")){
-            List<UUID> uuidActors = Arrays.stream(actorsId.split(",")).map(UUID::fromString).toList();
+            List<Long> LongActors = Arrays.stream(actorsId.split(",")).map(Long::parseLong).toList();
             list = list.stream().filter(x ->
-                    uuidActors.stream().allMatch(y ->
+                    LongActors.stream().allMatch(y ->
                             x.getActors().stream().anyMatch(z -> z.getId().equals(y)))).toList();
         }
         if(budgets != null && !budgets.equals("")){
@@ -74,29 +46,31 @@ public class FilmService {
         return list;
     }
 
-    public FilmPojo addActorInFilm(UUID filmId, UUID id) {
-       Film film = filmRepository.findById(filmId).get();
-       film.getActors().add(new Actor(id, null, null));
-       return FilmPojo.fromEntity(filmRepository.save(film));
+    public FilmDTO addActorInFilm(Long filmId, Long id) {
+        FilmDTO film = super.getById(filmId);
+        ActorDTO actorDTO = new ActorDTO();
+        actorDTO.setId(id);
+        film.getActors().add(actorDTO);
+        return super.update(film);
     }
 
-    // TODO: return boolean
-    public void deleteActorFromFilm(UUID filmId, UUID id) {
-        Film film = filmRepository.findById(filmId).get();
-        film.getActors().removeIf(actor -> id.equals(actor.getId()));
-        filmRepository.save(film);
+    public void deleteActorFromFilm(Long filmId, Long id) {
+        FilmDTO film = super.getById(filmId);
+        film.getActors().removeIf(actor -> actor.getId().equals(id));
+        super.update(film);
     }
 
-    public FilmPojo addGenreInFilm(UUID filmId, UUID id) {
-        Film film = filmRepository.findById(filmId).get();
-        film.getGenres().add(new Genre(id, null, null));
-        return FilmPojo.fromEntity(filmRepository.save(film));
+    public FilmDTO addGenreInFilm(Long filmId, Long id) {
+        FilmDTO film = super.getById(filmId);
+        GenreDTO genreDTO = new GenreDTO();
+        genreDTO.setId(id);
+        film.getGenres().add(genreDTO);
+        return super.update(film);
     }
 
-    // TODO: return boolean
-    public void deleteGenreFromFilm(UUID filmId, UUID id) {
-        Film film = filmRepository.findById(filmId).get();
-        film.getGenres().removeIf(genre -> id.equals(genre.getId()));
-        filmRepository.save(film);
+    public void deleteGenreFromFilm(Long filmId, Long id) {
+        FilmDTO film = super.getById(filmId);
+        film.getGenres().removeIf(genre -> genre.getId().equals(id));
+        super.update(film);
     }
 }

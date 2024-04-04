@@ -1,38 +1,30 @@
 package com.example.cinemachain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.cinemachain.entity.base.CommonEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.UUID;
 
+@Entity
+@Table(name = "genre")
+@AttributeOverride(name = "id", column = @Column(name = "genre_id"))
+@SequenceGenerator(name = "default_id_seq", sequenceName = "genre_genre_id_seq", allocationSize = 1)
 @Setter
 @Getter
-@AllArgsConstructor
-@Table (name = "genre")
-@Entity
-public class Genre {
-    @Id
-    @Column(name = "genre_id")
-    private UUID id;
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Genre extends CommonEntity {
     @Column(name = "genre_name")
     private String name;
     @ManyToMany(mappedBy = "genres")
     private List<Film> films;
 
-    public Genre() {
-
-    }
-
-    @Override
-    public String toString() {
-        return "Genre{" +
-                "id=" + id +
-                ", name='" + name + '\''  +
-                '}';
+    public Genre(Long id) {
+        this.setId(id);
     }
 }

@@ -1,38 +1,32 @@
 package com.example.cinemachain.entity;
 
+import com.example.cinemachain.entity.base.CommonEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.UUID;
 
-@Data
-@AllArgsConstructor
-@Table (name = "schedule")
 @Entity
-public class Schedule {
-    @Id
-    @Column(name = "schedule_id")
-    private UUID id;
+@Table(name = "schedule")
+@AttributeOverride(name = "id", column = @Column(name = "schedule_id"))
+@SequenceGenerator(name = "default_id_seq", sequenceName = "schedule_schedule_id_seq", allocationSize = 1)
+@Setter
+@Getter
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Schedule extends CommonEntity {
     @Column(name = "film_id")
-    private UUID filmId;
+    Long filmId;
     @Column(name = "cinema_id")
-    private UUID cinemaId;
+    Long cinemaId;
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
-    private List<Session> sessions;
+    List<Session> sessions;
 
-    public Schedule() {
-
-    }
-
-    @Override
-    public String toString() {
-        return "Schedule{" +
-                "id=" + id +
-                ", filmId=" + filmId +
-                ", cinemaId=" + cinemaId +
-                ", sessions=" + sessions +
-                '}';
+    public Schedule(Long id) {
+        this.setId(id);
     }
 }

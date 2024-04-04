@@ -1,71 +1,46 @@
 package com.example.cinemachain.controller;
 
-import com.example.cinemachain.entity.model.FilmPojo;
+import com.example.cinemachain.controller.base.BaseController;
+import com.example.cinemachain.dto.FilmDTO;
+import com.example.cinemachain.entity.Film;
 import com.example.cinemachain.service.FilmService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
-public class FilmController {
-    private final FilmService filmService;
+@RequestMapping("/api/film")
+public class FilmController extends BaseController<Film, FilmDTO> {
 
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
-    }
-
-    @GetMapping("/film")
-    public List<FilmPojo> getAll() {
-        return filmService.getAllFilms();
-    }
-
-    @GetMapping("/film/{id}")
-    public FilmPojo getFilmById(@PathVariable("id") UUID id) {
-        return filmService.getFilmById(id);
+    protected FilmController(FilmService service) {
+        super(service);
     }
 
     @GetMapping("/filmsByParams")
-    public List<FilmPojo> getFilmsByParams(@RequestParam(value = "name", required = false) String nameFilm,
-                                           @RequestParam(value = "genres_id", required = false) String genresId,
-                                           @RequestParam(value = "actors_id", required = false) String actorsId,
-                                           @RequestParam(value = "budgets", required = false) String budgets) {
-        return filmService.getFilmsByParams(nameFilm, genresId, actorsId, budgets);
+    public List<FilmDTO> getFilmsByParams(@RequestParam(value = "name", required = false) String nameFilm,
+                                          @RequestParam(value = "genres_id", required = false) String genresId,
+                                          @RequestParam(value = "actors_id", required = false) String actorsId,
+                                          @RequestParam(value = "budgets", required = false) String budgets) {
+        return ((FilmService) service).getFilmsByParams(nameFilm, genresId, actorsId, budgets);
     }
 
-    @PostMapping("/film")
-    public FilmPojo addFilm(@RequestBody FilmPojo filmPojo){
-        return filmService.addFilm(filmPojo);
+    @PutMapping("/{film_id}/addActor/{id}")
+    public FilmDTO addActorInFilm(@PathVariable("film_id") Long filmId, @PathVariable("id") Long id){
+        return ((FilmService) service).addActorInFilm(filmId, id);
     }
 
-    @PutMapping("/film")
-    public FilmPojo updateFilm(@RequestBody FilmPojo filmPojo){
-        return filmService.updateFilm(filmPojo);
+    @DeleteMapping ("/{film_id}/deleteActor/{id}")
+    public void deleteActorFromFilm(@PathVariable("film_id") Long filmId, @PathVariable("id") Long id){
+        ((FilmService) service).deleteActorFromFilm(filmId, id);
     }
 
-    @DeleteMapping ("/film/{id}")
-    public void deleteFilm(@PathVariable("id") UUID id){
-        filmService.deleteFilm(id);
+    @PutMapping("/{film_id}/addGenre/{id}")
+    public FilmDTO addGenreInFilm(@PathVariable("film_id") Long filmId, @PathVariable("id") Long id){
+        return ((FilmService) service).addGenreInFilm(filmId, id);
     }
 
-    @PutMapping("/film/{film_id}/addActor/{id}")
-    public FilmPojo addActorInFilm(@PathVariable("film_id") UUID filmId, @PathVariable("id") UUID id){
-        return filmService.addActorInFilm(filmId, id);
-    }
-
-    @DeleteMapping ("/film/{film_id}/deleteActor/{id}")
-    public void deleteActorFromFilm(@PathVariable("film_id") UUID filmId, @PathVariable("id") UUID id){
-        filmService.deleteActorFromFilm(filmId, id);
-    }
-
-    @PutMapping("/film/{film_id}/addGenre/{id}")
-    public FilmPojo addGenreInFilm(@PathVariable("film_id") UUID filmId, @PathVariable("id") UUID id){
-        return filmService.addGenreInFilm(filmId, id);
-    }
-
-    @DeleteMapping ("/film/{film_id}/deleteGenre/{id}")
-    public void deleteGenreFromFilm(@PathVariable("film_id") UUID filmId, @PathVariable("id") UUID id){
-        filmService.deleteGenreFromFilm(filmId, id);
+    @DeleteMapping ("/{film_id}/deleteGenre/{id}")
+    public void deleteGenreFromFilm(@PathVariable("film_id") Long filmId, @PathVariable("id") Long id){
+        ((FilmService) service).deleteGenreFromFilm(filmId, id);
     }
 }

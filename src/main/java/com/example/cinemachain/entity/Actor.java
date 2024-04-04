@@ -1,38 +1,34 @@
 package com.example.cinemachain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.cinemachain.entity.base.CommonEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.UUID;
 
+@Entity
+@Table(name = "actor")
+@AttributeOverride(name = "id", column = @Column(name = "actor_id"))
+@SequenceGenerator(name = "default_id_seq", sequenceName = "actor_actor_id_seq", allocationSize = 1)
 @Setter
 @Getter
-@Table (name = "actor")
-@Entity
-@AllArgsConstructor
-public class Actor {
-    @Id
-    @Column(name = "actor_id")
-    private UUID id;
-    @Column(name = "fio")
-    private String fio;
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Actor extends CommonEntity {
+    @Column(name = "actor_first_name")
+    String firstName; //Имя
+    @Column(name = "actor_last_name")
+    String lastName; //Фамилия
+    @Column(name = "actor_second_name")
+    String secondName; //Отчество
     @ManyToMany(mappedBy = "actors")
-    private List<Film> films;
+    List<Film> films;
 
-    public Actor() {
-
-    }
-
-    @Override
-    public String toString() {
-        return "Actor{" +
-                "id=" + id +
-                ", fio='" + fio + '\'' +
-                '}';
+    public Actor(Long id) {
+        this.setId(id);
     }
 }

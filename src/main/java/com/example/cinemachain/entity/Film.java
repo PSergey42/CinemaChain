@@ -1,27 +1,32 @@
 package com.example.cinemachain.entity;
 
+import com.example.cinemachain.entity.base.CommonEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
-@Data
-@AllArgsConstructor
-@Table (name = "film")
 @Entity
-public class Film {
-    @Id
-    @Column(name = "film_id")
-    private UUID id;
+@Table(name = "film")
+@AttributeOverride(name = "id", column = @Column(name = "film_id"))
+@SequenceGenerator(name = "default_id_seq", sequenceName = "film_film_id_seq", allocationSize = 1)
+@Setter
+@Getter
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Film extends CommonEntity {
     @Column(name = "film_name")
-    private String name;
-    @Column(name = "date_exits")
-    private Date dateExits;
+    String name;
+    @Column(name = "film_date_exits")
+    LocalDate dateExits;
     @JsonIgnore
     @ManyToMany()
     @Fetch(value = FetchMode.SUBSELECT)
@@ -29,7 +34,7 @@ public class Film {
             name = "genre_film",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private List<Genre> genres;
+    List<Genre> genres;
     @JsonIgnore
     @ManyToMany()
     @Fetch(value = FetchMode.SUBSELECT)
@@ -37,12 +42,11 @@ public class Film {
             name = "actor_film",
             joinColumns = @JoinColumn(name = "film_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id"))
-    private List<Actor> actors;
-    @Column(name = "budget")
-    private long budget;
+    List<Actor> actors;
+    @Column(name = "film_budget")
+    Long budget;
 
-    public Film() {
-
+    public Film(Long id) {
+        this.setId(id);
     }
-
 }

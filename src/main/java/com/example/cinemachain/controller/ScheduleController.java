@@ -1,61 +1,36 @@
 package com.example.cinemachain.controller;
 
-import com.example.cinemachain.entity.model.CinemaPojo;
-import com.example.cinemachain.entity.model.SchedulePojo;
+import com.example.cinemachain.controller.base.BaseController;
+import com.example.cinemachain.dto.ScheduleDTO;
+import com.example.cinemachain.entity.Schedule;
 import com.example.cinemachain.service.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.text.ParseException;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/api")
-public class ScheduleController {
-    private final ScheduleService scheduleService;
+@RequestMapping("/api/schedule")
+public class ScheduleController extends BaseController<Schedule, ScheduleDTO> {
 
-    public ScheduleController(ScheduleService scheduleService) {
-        this.scheduleService = scheduleService;
+    protected ScheduleController(ScheduleService service) {
+        super(service);
     }
 
-    @GetMapping("/schedule")
-    public List<SchedulePojo> getAll() {
-        return scheduleService.getAllSchedules();
-    }
-
-    @GetMapping("/schedule/{id}")
-    public List<SchedulePojo> getScheduleByCinemaIdAndDate(@PathVariable("id") UUID id, @RequestParam(name = "date") String date){
-        List<SchedulePojo> list = scheduleService.getScheduleByCinemaIdAndDate(id, date);
+    @GetMapping("/search/date")
+    public List<ScheduleDTO> getScheduleByCinemaIdAndDate(@RequestParam("id") Long id, @RequestParam(name = "date") String date){
+        List<ScheduleDTO> list = ((ScheduleService) service).getScheduleByCinemaIdAndDate(id, date);
         if(list == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return list;
     }
 
-    @GetMapping("/schedule/search/{cinemaId}")
-    public List<SchedulePojo> searchScheduleByName(@RequestParam(value = "nameSchedule", required = false) String nameSchedule, @RequestParam(name = "date") String date, @PathVariable("cinemaId") UUID id) {
-        return scheduleService.searchScheduleByName(id, nameSchedule, date);
-    }
-
-    @PostMapping("/schedule")
-    public SchedulePojo addSchedule(@RequestBody SchedulePojo schedulePojo){
-        return scheduleService.addSchedule(schedulePojo);
-    }
-
-    @PutMapping("/schedule")
-    public SchedulePojo updateSchedule(@RequestBody SchedulePojo schedulePojo){
-        return scheduleService.updateSchedule(schedulePojo);
-    }
-
-    @DeleteMapping ("/schedule/{id}")
-    public void deleteSchedule(@PathVariable("id") UUID id){
-        scheduleService.deleteSchedule(id);
-    }
-
-    @DeleteMapping ("/schedule/session/{id}")
-    public void deleteSession(@PathVariable("id") Long id){
-        scheduleService.deleteSession(id);
+    @GetMapping("/search")
+    public List<ScheduleDTO> searchScheduleByName(@RequestParam(value = "nameSchedule", required = false) String nameSchedule,
+                                                  @RequestParam(name = "date") String date,
+                                                  @RequestParam(name = "cinemaId") Long cinemaId) {
+        return ((ScheduleService) service).searchScheduleByName(cinemaId, nameSchedule, date);
     }
 }

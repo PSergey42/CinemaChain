@@ -1,13 +1,12 @@
 package com.example.cinemachain.repository;
 
 import com.example.cinemachain.entity.Genre;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.cinemachain.repository.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface GenreRepository extends JpaRepository<Genre, UUID> {
-    List<Genre> findAllByNameContainingIgnoreCase(String nameGenre);
+public interface GenreRepository extends BaseRepository<Genre> {
+    List<Genre> findAllByNameContainingIgnoreCase(String name);
 }
